@@ -1,0 +1,15 @@
+{% extends "layout2.html" %}
+
+{% block container %}
+<h1>Calculadora</h1>
+    <input type="text">
+<form action="/resultado" method="POST">
+    <label>Numero 1: </label>
+    <input class="form-control" type="text" name="n1"><br>
+    <label>Numero 2: </label>
+    <input class="form-control" type="text" name="n2"><br>
+    <input class="btn btn-success" type="submit">
+</form>
+
+
+{%endblock%}
