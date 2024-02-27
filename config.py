@@ -8,5 +8,5 @@ class Config(object):
 
 class DevelopmentConfig(Config):
     DEBUG=True
-    SQLALCHEMY_DATABASE_URL = "MYSQL+PYMYSQL://root:123456789@127.0.0.1/bdidgs801"
-    SQLALCHEMY_TRACK_MODIFIVATIONS= False
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://python3:123456789@127.0.0.1/bdidgs801"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
