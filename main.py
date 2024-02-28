@@ -17,9 +17,7 @@ def page_not_found(e):
 @app.route("/",methods=['GET','POST'])
 def index():
     formulario = UserForm(request.form)
-    print("Hola")
     if request.method == 'POST':
-        print("hola 2")
         alumno = Alumnos(nombre = formulario.nombre.data, 
                          apaterno = formulario.apaterno.data,
                          amaterno = formulario.amaterno.data,
@@ -48,6 +46,11 @@ def alumnos():
         mensaje = "Bienvenido, {}".format(nombre + " " + amaterno)
         flash(mensaje)
     return render_template("alumnos.html",form=alumno_clase,nombre=nombre,apaterno=apaterno,amaterno=amaterno,edad=edad,email=email)
+
+@app.route("/ABC_Completo", methods=[ "GET", "POST"])
+def ABCompleto():
+    alumno = Alumnos.query.all()
+    return render_template("ABC_Completo.html", alumnos=alumno)
 
 if __name__ == "__main__":
     csrf.init_app(app)
