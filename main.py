@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,flash,g
+from flask import Flask,render_template,request,flash,g,redirect,url_for
 from forms import UserForm
 from flask_wtf.csrf import CSRFProtect
 from config import DevelopmentConfig
@@ -24,6 +24,8 @@ def index():
                          email = formulario.email.data)
         db.session.add(alumno)
         db.session.commit()
+
+        formulario = UserForm()
         print("Finalizó")
     return render_template("index.html", form=formulario)
 
@@ -51,6 +53,51 @@ def alumnos():
 def ABCompleto():
     alumno = Alumnos.query.all()
     return render_template("ABC_Completo.html", alumnos=alumno)
+
+@app.route("/eliminar", methods=[ "GET", "POST"])
+def eliminar():
+    formulario = UserForm(request.form)
+    if request.method == 'GET':
+        id = request.args.get('id')
+        alumno1 = db.session.query(Alumnos).filter(Alumnos.id == id).first()
+        formulario.id.data = request.args.get('id')
+        formulario.nombre.data = alumno1.nombre
+        formulario.apaterno.data = alumno1.apaterno
+        formulario.email.data = alumno1.email
+        
+    if request.method == 'POST':
+        id = formulario.id.data
+        alumno = Alumnos.query.get(id)
+        db.session.delete(alumno)
+        db.session.commit()
+        return redirect(url_for('ABCompleto'))
+
+    return render_template("eliminar.html", form=formulario)
+
+
+@app.route("/modificar", methods=["GET", "POST"])
+def modificar():
+    formulario = UserForm(request.form)
+    if request.method == 'GET':
+        id = request.args.get('id')
+        alumno = db.session.query(Alumnos).filter(Alumnos.id == id).first()
+        formulario.id.data = id
+        formulario.nombre.data = alumno.nombre
+        formulario.apaterno.data = alumno.apaterno
+        formulario.email.data = alumno.email
+
+    if request.method == 'POST':
+        id = formulario.id.data
+        alumno = Alumnos.query.get(id)
+        alumno.nombre = formulario.nombre.data
+        alumno.apaterno = formulario.apaterno.data
+        alumno.email = formulario.email.data
+        db.session.commit()
+        return redirect(url_for('ABCompleto'))
+
+    return render_template("modificar.html", form=formulario)
+
+
 
 if __name__ == "__main__":
     csrf.init_app(app)
